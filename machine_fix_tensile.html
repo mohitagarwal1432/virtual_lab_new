@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body
+        {
+            margin: 0px;
+        }
+        #dragImage 
+        {
+            position: absolute;
+            z-index: 9;
+            left:450px;
+            top:250px;
+            height: 90px;
+        }
+        #machine
+        {
+            height: 500px;
+            position: absolute;
+            top:100px;
+        }
+        .division
+        {
+            border: 2px solid black;
+            width: 900px;
+            height: 600px;
+            background-color: #b3f0ff;
+        }
+        #test
+        {
+            height: 60px;
+            width: 40px;
+            position: absolute;
+            background-color: red;
+            top:150px;
+            left:85px; 
+        }
+        #zoom
+        {
+            height: 260px;
+            position: absolute;
+            top:160px;
+            left:20px;
+            z-index: 0;
+            display: none;
+        }
+        #steps
+        {
+            color:black;
+            text-align: center;
+        }
+        #console
+        {
+            background-color: white;
+            color: red;
+            width: 250px;
+            height: 150px;
+            text-align: center;
+            padding: 5px;
+            position: absolute;
+            top:200px;
+            left: 560px;
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;  
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;  
+        }
+        #span0
+        {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <!--<p id="p" style="position:absolute"></p>-->
+    <img id="dragImage" src="images/tensile_spring.png" style="width:50px;">
+    <div class="division">
+        <img id="machine" src="images/machine.png">
+        <h3 id="steps">Drag the spring and fix it on its appropriate position.</h3>
+        <div id="console">
+            <h3 style="color:black;">CONSOLE</h3>
+            <h4 id="log"></h4>
+        </div>
+    <span class="button" id="span1" style="float:right;display:none">Next</span>
+    </div>
+    <script>
+        //Make the imaage element draggagle:
+        var set=0;
+        dragElement1(document.getElementById("dragImage"));
+        function dragElement1(elmnt) 
+        {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+           
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+            
+                elmnt.onmousedown = dragMouseDown1;
+            function dragMouseDown1(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement1;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag1;
+            }
+
+            function elementDrag1(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (pos4-10) + "px";
+                elmnt.style.left = (pos3) + "px";
+                //document.getElementById("p").innerHTML="x = "+pos3+" y = "+pos4;
+            }
+
+            function closeDragElement1() 
+            {
+                /* stop moving when mouse button is released:*/
+                if(pos3>85&&pos3<145&&pos4>150&&pos4<190)
+                {
+                    elmnt.style.left = (105) + "px";
+                    elmnt.style.top = (165) + "px";
+                    set=1;
+                    document.getElementById("log").innerHTML="Hurey!!<br><br>Spring is fixed.";
+                    document.getElementById("log").style.color="green";
+                    
+                    document.getElementById("span1").style.display="block";
+                }
+                else
+                {
+                    document.getElementById("log").innerHTML="You Placed the spring in the wrong position.<br><br> TRY AGAIN!!"
+                    document.getElementById("log").style.color="red";
+                    var x1=pos3;  
+                    var y1=pos4; 
+                    //alert(x1);
+                    if(!timer)
+                    var timer=setInterval(function()
+                    {
+                        if(x1>450)
+                            x1--;
+                        if(x1<450)
+                            x1++;
+                        if(y1>250)
+                            y1--;
+                        if(y1<250)
+                            y1++;
+                        elmnt.style.top = (y1) + "px";
+                        elmnt.style.left = (x1) + "px";
+                        if(x1==450&&y1==250)
+                            clearInterval(timer);
+                    },0.01);
+                }
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+    }
+    </script>
+    
+    </body>
+</html>

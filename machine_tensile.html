@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body
+        {
+            margin: 0px;
+        }
+        #springimg
+        {
+            position: absolute;
+            z-index: 9;
+            left:130px;
+            top:128px;
+            height: 80px;
+            transition: 4s;
+        }
+        #mpart1,#mpart2,#mpart3
+        {
+            height: 350px;
+            position: absolute;
+            top:200px;
+            left:30px;
+        }
+        #mpart1
+        {
+            top:60px;
+            height: 300px;
+            left:95px;
+            z-index: 2;
+            transition: 4s;
+        }
+        #mpart3
+        {
+            top:375px;
+            height: 40px;
+            left:215px;
+            z-index: 2;
+        }
+        #dial
+        {
+            position: absolute;
+            height: 250px;
+            left:350px;
+            top:70px
+        }
+        #needle
+        {
+            position: absolute;
+            left: 470px;
+            height:120px;
+            top:135px;
+            transform: :rotate(0deg);
+            transition: 4s;
+            
+        }
+        .division
+        {
+            border: 2px solid black;
+            width: 900px;
+            height: 700px;
+            background-color: #b3f0ff;
+        }
+        #test
+        {
+            height: 40px;
+            width: 60px;
+            position: absolute;
+            background-color: red;
+            top:300px;
+            left:85px; 
+        }
+        #zoom
+        {
+            height: 260px;
+            position: absolute;
+            top:160px;
+            left:20px;
+            z-index: 0;
+            display: none;
+        }
+        #steps
+        {
+            color:black;
+            text-align: center;
+        }
+        #console
+        {
+            background-color: white;
+            color: blue;
+            width: 250px;
+            height: 150px;
+            text-align: center;
+            padding: 5px;
+            position: absolute;
+            top:50px;
+            left: 620px;
+        }
+        #load-input-div
+        {
+            position: absolute;
+            top:580px;
+            left:50px;
+            display: none;
+        }
+        #span0
+        {
+            position: absolute;
+        }
+        table, th, td
+        {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        #table-div
+        {
+            position: absolute;
+            top:450px;
+            background-color:burlywood;
+            width: 500px;
+            left:350px;
+            display: none;
+        }
+        td
+        {
+            height: 30px;
+        }
+        #spring-info
+        {
+            display: none;
+            line-height: 1px;
+            position: absolute;
+            top:240px;
+            left:620px;
+            background-color: darkseagreen;
+            padding:0 5px 0 15px;
+            width: 200px;
+            color:darkslateblue;
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;
+            display: none;
+        }
+        .submit
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            margin-left: 40px;
+        }
+        .mySlide1
+        {
+            width:900px;
+        }
+        .question-window
+        {
+            margin:0 auto;
+        }
+    </style>
+    <script src="js/graph.ob.js"></script>
+
+    <script src="js/graph_line_use.ob.js"></script>
+</head>
+<body>
+    <!--<p id="p" style="position:absolute"></p>-->
+    <div class="mySlide1">
+        <div class="division">
+            <img id="springimg" src="images/tensile_spring.png" style="width:50px;">
+            <span id="span0"></span>
+            <img id="mpart1" src="images/machine_part1.png">
+            <img id="mpart2" src="images/machine_part2.png">
+            <img id="mpart3" src="images/machine_part3.png" onclick="rotatevalve()">
+            <img id="dial" src="images/dial.png">
+            <img id="needle" src="images/needle.png">
+            <h3 id="steps">Click on the pressure valve to close it.</h3>
+            <div id="console">
+                <h3 style="color:black;">CONSOLE</h3>
+                <h4 id="log">Pressure value is present on machine near dial.</h4>
+            </div>
+            <div id="load-input-div">
+                <input id="load" type="range" name="points" min="100" max="140" value="100" oninput="changeload()" >
+                <input  type="submit" value="Apply Load" onclick="machinesimulation()">
+                <p id="displayload">LOAD = 100 kgf</p> 
+                <script>
+                    var w=100;
+                    function changeload()
+                    {
+                        w=parseFloat(document.getElementById('load').value);
+                        document.getElementById('displayload').innerHTML="LOAD = "+w+" kgf";
+                        document.getElementById('spring-info-load').innerHTML="w = "+w+" kgf";
+                    }
+                </script>
+            </div>
+            <div id="spring-info">
+                <h3>For selected spring: -</h3>
+                <h4 id="spring-info-load">w = 100 kgf</h4>
+                <h4>n = 13</h4>
+                <h4>D = 62.08 mm</h4>
+                <h4>d = 17.02 mm</h4>
+            </div>
+            <div id="table-div">
+
+                <table id="table_1">
+                    <tr>
+                        <th>S-No.</th>
+                        <th>Load (w), kgf</th>
+                        <th>Deflection(δ)mm</th>
+                        <th>Spring stiffness k=w/δ kgf/mm</th>
+                        <th>Modulus of rigidity(G)</th>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <p onclick="plusDivs(1)" class="button" style="float:right;">Next</p>
+    </div> 
+    <div class="mySlide1">
+        <div class="question-window">
+            <h2>Q. By increasing the value of load what will happen on the deflection?</h2>
+            <form name="quiz1" onsubmit="return submitanswer()">
+                <ol type="A">
+                    <li style="font-size:20px;margin-left:60px"><input type="radio" value="A" name="option" required>Will remain constant</li>
+                    <li style="font-size:20px;margin-left:60px"><input type="radio" value="B" name="option">Will decrease</li>
+                    <li style="font-size:20px;margin-left:60px"><input type="radio" value="C" name="option">Will increase</li>
+                    <li style="font-size:20px;margin-left:60px"><input type="radio" value="D" name="option">Cannot be determined</li>
+                </ol>
+                <br>
+                <input type="submit" value="Check" class="submit">
+            </form>
+            <h4 class="incorrect" style="color:red;margin-left:40px;"></h4>
+            <h4 class="correct" style="color:green;margin-left:40px;"></h4>
+        </div>
+        <p onclick="plusDivs(-1)" class="button" style="float:left;">Back</p>
+        <p onclick="plusDivs(1)" class="button" style="float:right;">Next</p>
+    </div> 
+    <div class="mySlide1">
+        <div  id="graph">
+            <div id="l1" style="width:550px;height:400px"></div>   
+        </div>
+        <p onclick="plusDivs(-1)" class="button" style="float:left;">Back</p>
+        <p onclick="plusDivs(1)" class="button" style="float:right;">Next</p>
+    </div> 
+    <div class="mySlide1">
+        <div class="question-window">
+            <h2>Compare the average value of modulus of rigidity with its theoretical values</h2>
+            
+            <div style="text-align:right;width:450px;display:inline-block">
+                <h3><span style="background-color:wheat;padding:5px;">Theoretical  value of modulus of rigidity</span></h3>
+                
+                <h3><span style="background-color:wheat;padding:5px;">Experimental value of modulus of rigidity</span></h3>
+                
+                <h3><span style="background-color:wheat;padding:5px;">Error</span></h3>
+            </div>
+            
+            <div style="text-align:right;width:50px;display:inline-block">
+                <h3><span >=</span></h3>
+                
+                <h3><span>=</span></h3>
+                
+                <h3><span >=</span></h3>
+            </div>
+            
+            <div style="text-align:right;width:150px;display:inline-block">
+                <h3><span style="border:1px solid; padding:5px;width:80px">8303.061</span></h3>
+                
+                <h3><span><input type="number" step="0.02" value="" style="border:1px solid black;padding:5px;width:80px;" id="input-mod" onchange="errorCal()"></span></h3>
+                
+                <h3><span style="border:1px solid; padding:5px;width:80px" id="error_in_mod"></span></h3>
+            </div>
+            <br>
+            <i style="margin-left:100px;background-color:#f2f2f2">Difference between average value of modulus of rigidity with its theoretical values.</i>
+            <h2 id="incorr" style="color:red;margin-left:100px;"></h2>
+        </div>
+        <p onclick="plusDivs(-1)" class="button" style="float:left;">Back</p>
+    </div>
+       
+        
+    
+    
+    <script>
+        var datapoints1 = [];
+        var animate=0;
+        var tableRow=1;
+        var avg_g=0;
+        var D=62.08;
+        var d=17.02;
+        var c;
+        var n=13;
+        var k;
+        var G1;
+        function rotatevalve()
+        {
+            var j=0;
+            if(animate==0)
+            {
+                var timer2=setInterval(function()
+                {
+                    var x="rotate("+j+"deg)";
+                    document.getElementById('mpart3').style.transform =x;  
+                    j++;
+                    console.log(j);
+                    if(j==359)
+                        clearInterval(timer2);
+                },1);
+                animate++;
+                setTimeout(function()
+                {
+                    document.getElementById("steps").innerHTML="Select load from slider and click on apply load.";
+                    document.getElementById("log").innerHTML="Apply load in range of 100kgf to 140 kgf.";
+                    document.getElementById("load-input-div").style.display="block";  
+                },2000);
+                
+            }
+        }
+        function machinesimulation()
+        {
+            var i=0;
+            document.getElementById("load-input-div").style.display="none";
+            if(tableRow==1)
+            {
+                document.getElementById("mpart1").style.top="56px";
+                document.getElementById("springimg").style.top="124px";
+                document.getElementById("springimg").style.height="84px";
+            }
+            if(tableRow==2)
+            {
+                document.getElementById("mpart1").style.top="52px";
+                document.getElementById("springimg").style.top="120px";
+                document.getElementById("springimg").style.height="88px";
+            }
+            if(tableRow==3)
+            {
+                document.getElementById("mpart1").style.top="48px";
+                document.getElementById("springimg").style.top="116px";
+                document.getElementById("springimg").style.height="92px";
+            }
+            if(tableRow==4)
+            {
+                document.getElementById("mpart1").style.top="44px";
+                document.getElementById("springimg").style.top="112px";
+                document.getElementById("springimg").style.height="96px";
+            }
+            if(tableRow==5)
+            {
+                document.getElementById("mpart1").style.top="40px";
+                document.getElementById("springimg").style.top="108px";
+                document.getElementById("springimg").style.height="100px";
+            }
+            
+             var timer=setInterval(function()
+            {
+                var x="rotate("+i+"deg)";
+                document.getElementById('needle').style.transform =x;  
+                i++;
+                if(i==w)
+                    clearInterval(timer);
+            },1);
+            setTimeout(function()
+            {
+                
+                c=D/d;//spring index
+                c=c.toFixed(3);
+                r=parseFloat(D/2);//radius
+                r=parseFloat(r.toFixed(3));
+                //t=w*r;
+                //t=t.toFixed(3);
+                var G=8303.061;
+                var diff=parseFloat((8*w*D*D*D*n)/(d*d*d*d*G));
+                diff=parseFloat(diff.toFixed(2));
+                //diff=parseFloat(diff+(diff*0.01*Math.floor(Math.random() * 4)));
+                k=w/diff;
+                
+                k=parseFloat(k.toFixed(2));
+
+                
+                
+                G1=parseFloat((8*w*D*D*D*n)/(d*d*d*d*diff));
+                G1=parseFloat(G1.toFixed(2));
+                
+                //graph
+                datapoints1.push({ x: diff, y: w });
+                
+                console.log("G1 = "+G1);
+                console.log("K = "+k);
+                
+                document.getElementById("table-div").style.display="block";
+                document.getElementById("spring-info").style.display="block";
+                
+                var tb1 = document.getElementById("table_1");
+                    
+                var row = tb1.insertRow();
+                    
+                var cell = row.insertCell();
+                cell.innerHTML=tableRow;
+                
+                var cell = row.insertCell();
+                cell.innerHTML=w;
+                
+                var cell = row.insertCell();
+                cell.innerHTML=diff;
+                    
+                var cell = row.insertCell();
+                var t = document.createElement("input");
+                t.type = "number";
+                t.id = "row_"+tableRow+"_1";
+                t.addEventListener("change", verify);
+                t.value="";
+                t.step="0.01";
+                t.style.backgroundColor = "white";
+                t.style.border = "none";
+                t.style.padding = "4px 0px";
+                t.style.width = "150px";
+                
+                
+                cell.appendChild(t);
+
+
+                var cell = row.insertCell();
+                var t = document.createElement("input");
+                t.type = "number";
+                t.addEventListener("change", verify);
+                t.step="0.01";
+                t.value="";
+                t.id = "row_"+tableRow+"_2";
+                t.style.backgroundColor = "#bfbfbf";
+                t.style.border = "none";
+                t.style.padding = "4px 0px";  
+                t.style.width = "150px";
+                t.disabled="true";
+                cell.appendChild(t);
+                
+                document.getElementById("steps").innerHTML="Fill the value of spring stiffness inside table for applied load.";
+                document.getElementById("log").innerHTML="Calculate and note all the values of k and G. These will be reqired later.";
+                tableRow++;
+                
+            },4500);
+            
+        }
+        var trial1=0;
+        var trial2=0;
+        function verify()
+        {
+            var a=0;
+            var b=0;
+            var id1="row_"+(tableRow-1)+"_1";
+            var k_1=parseFloat(document.getElementById(id1).value);
+            var id2="row_"+(tableRow-1)+"_2";
+            var G_1=parseFloat(document.getElementById(id2).value);
+            
+            if(k_1)
+            {
+                if(trial1==1)
+                {
+                    document.getElementById(id1).value=k;
+                    a=1;
+                    document.getElementById("log").innerHTML="Value of k insesrted by you is "+k_1+"<br>Correct value of k is "+k+"<br>We have filled that for you, try calculating on next turn";
+                    document.getElementById("console").style.color="GREEN";
+                    document.getElementById(id1).disabled=true;
+                    document.getElementById(id2).disabled=false;
+                    document.getElementById(id1).style.backgroundColor="green";
+                    document.getElementById(id2).style.backgroundColor="white";
+                    document.getElementById(id1).style.color="white";
+                    document.getElementById("steps").innerHTML="Fill the value of modulus of rigidity inside table for applied load.";
+                    trial1++;
+                }
+                else
+                {
+                    if(k_1>=k-0.25&&k_1<=k+0.25)
+                    {
+                        a=1;
+                        document.getElementById("log").innerHTML="CORRECT";
+                        document.getElementById("console").style.color="GREEN";
+                        document.getElementById(id1).disabled=true;
+                        document.getElementById(id2).disabled=false;
+                        document.getElementById(id1).style.backgroundColor="green";
+                        document.getElementById(id2).style.backgroundColor="white";
+                        document.getElementById(id1).style.color="white";
+                        document.getElementById("steps").innerHTML="Fill the value of modulus of rigidity inside table for applied load.";
+                    }
+                    else
+                    {
+                        document.getElementById("log").innerHTML="WRONG";
+                        document.getElementById("console").style.color="RED";
+                        document.getElementById(id1).style.backgroundColor="red";
+                        document.getElementById(id1).style.color="white";
+                        trial1++;
+                    }   
+                }
+                
+            }
+            if(G_1&&!b)
+            {
+                if(trial2==1)
+                {
+                    document.getElementById(id2).value=G1;
+                    b=1;
+                    document.getElementById("log").innerHTML="Value of G insesrted by you is "+G_1+"<br>Correct value of G is "+G1+"<br>We have filled that for you, try calculating on next time";
+                    document.getElementById("console").style.color="GREEN";
+                    document.getElementById(id2).disabled=true;
+                    document.getElementById(id2).style.backgroundColor="green";
+                    document.getElementById(id2).style.color="white";
+                    document.getElementById("steps").innerHTML="Fill the value of modulus of rigidity inside table for applied load.";
+                    avg_g=avg_g+G1;
+                    trial2++;
+                }
+                else
+                {
+                    if(G_1>=G1-0.25&&G_1<=G1+0.25)
+                    {
+                        b=1;
+                        document.getElementById("log").innerHTML="CORRECT";
+                        document.getElementById("console").style.color="GREEN";
+                        document.getElementById(id2).disabled=true;
+                        document.getElementById(id2).style.backgroundColor="green";
+                        document.getElementById(id2).style.color="white";
+                        avg_g=avg_g+G_1;
+                    }
+                    else
+                    {
+                        document.getElementById("log").innerHTML="WRONG";
+                        document.getElementById("console").style.color="RED";
+                        document.getElementById(id2).style.backgroundColor="red";
+                        document.getElementById(id2).style.color="white";
+                        trial2++;
+                    }
+                }
+            }
+            if(tableRow==6&&a&&b)
+            {
+                displaytest1button();
+                avg_g=avg_g/5;
+                graphline("l1", datapoints1, "Deflection", "Load");
+            }
+            if(tableRow<=5&&a&&b)
+            {
+                
+                    document.getElementById("steps").innerHTML="Select load from slider and click on apply load.";
+                    document.getElementById("load-input-div").style.display="block";
+                    trial1=0;
+                    trial2=0;
+                    if(tableRow==2)
+                    {
+                        document.getElementById("log").innerHTML="Apply load in range of 140kgf to 180 kgf.";
+                        document.getElementById("load").min="140";
+                        document.getElementById("load").max="180";
+                        w=140;
+                        document.getElementById('displayload').innerHTML="LOAD = "+w+" kgf";
+                        document.getElementById('spring-info-load').innerHTML="w = 140";
+                    }
+                    if(tableRow==3)
+                    {
+                        document.getElementById("log").innerHTML="Apply load in range of 180kgf to 220 kgf.";
+                        document.getElementById("load").min="180";
+                        document.getElementById("load").max="220";
+                        w=180;
+                        document.getElementById('displayload').innerHTML="LOAD = "+w+" kgf";
+                        document.getElementById('spring-info-load').innerHTML="w = 180 kgf";
+                    }
+                    if(tableRow==4)
+                    {
+                        document.getElementById("log").innerHTML="Apply load in range of 220kgf to 260 kgf.";
+                        document.getElementById("load").min="220";
+                        document.getElementById("load").max="260";
+                        w=220;
+                        document.getElementById('displayload').innerHTML="LOAD = "+w+" kgf";
+                        document.getElementById('spring-info-load').innerHTML="w = 220";
+                    }
+                    if(tableRow==5)
+                    {
+                        document.getElementById("log").innerHTML="Apply load in range of 260kgf to 300 kgf.";
+                        document.getElementById("load").min="260";
+                        document.getElementById("load").max="300";
+                        w=260;
+                        document.getElementById('displayload').innerHTML="LOAD = "+w+" kgf";
+                        document.getElementById('spring-info-load').innerHTML="w = 260 kgf";
+                        
+                    }
+            }
+        }
+    </script>
+    <script>
+        function submitanswer()
+        {
+            var option = document.forms["quiz1"]["option"].value;
+            var x = document.getElementsByClassName("submit");
+            x[0].style.display="none";
+            if(option=='C')
+            {
+                x = document.getElementsByClassName("correct");
+                x[0].innerHTML="Correct Answer";
+            }
+            else    
+            {
+                x = document.getElementsByClassName("incorrect");
+                x[0].innerHTML="Wrong Answer";
+                x = document.getElementsByClassName("correct");
+                x[0].innerHTML="Correct option is C";
+            }
+            displaytest1button();
+            return false;
+        }
+        function errorCal()
+        {   console.log(avg_g);
+            var x=parseFloat(document.getElementById("input-mod").value);
+            if(x>=avg_g-0.25&&x<=avg_g+0.25)
+            {
+                document.getElementById("error_in_mod").innerHTML=8303.061-x;
+                document.getElementById("incorr").innerHTML="CORRECT";
+                document.getElementById("incorr").style.color="green";
+            }
+            else
+            {
+                document.getElementById("incorr").innerHTML="WRONG";
+                document.getElementById("incorr").style.color="red";
+            }
+        }
+    </script>
+    <script>
+        var slideIndex1 = 1;
+        showDivs(slideIndex1);
+
+        function plusDivs(n) 
+        {
+            showDivs(slideIndex1 += n);
+        }
+
+        function showDivs(n) 
+        {
+            var i;
+            var x = document.getElementsByClassName("mySlide1");
+            if (n > x.length) {slideIndex1 = 1}
+            if (n < 1) {slideIndex1 = x.length}
+            for (i = 0; i < x.length; i++) 
+            {
+                x[i].style.display = "none";  
+            }
+            x[slideIndex1-1].style.display = "block";
+            if(slideIndex1==3)
+                displaytest1button();
+        }
+        function displaytest1button()
+        {
+            var x = document.getElementsByClassName("button");
+            x[2*slideIndex1-2].style.display="block";
+            x[2*slideIndex1-1].style.display="block";
+        }
+    </script>
+</body>
+</html>

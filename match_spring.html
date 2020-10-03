@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caliper</title>
+    <style>
+        body
+        {
+            margin: 0px;
+        }
+        th,td,table
+        {
+            border:3.5px solid black;
+            border-collapse: collapse;
+            text-align: center;
+            padding: 10px;
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;  
+            display:none;
+        }
+        td,th
+        {
+            width: 400px
+        }
+        select
+        {
+            border:2px solid rgba(0,0,0,0.5);
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+        <table>
+            <tr>
+                <th>Spring-Image</th>
+                <th>Spring-Name</th>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/compressive_spring.png" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_1" style="border:2px solid black;">
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/conical.jpg" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_2" disabled>
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/disc_spring.jpg" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_3" disabled>
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/leaf.jpg" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_4" disabled>
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/tensile_spring.png" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_5" disabled>
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/torsional_spring_2.jpg" style="height:70px">
+                </td>
+                <td>
+                    <select onchange="checkans()" id="slide1_6" disabled>
+                        <option value="">Select Spring name</option>
+                        <option value="1">Leaf Spring</option>
+                        <option value="2">Compressive Spring</option>
+                        <option value="3">Tensile Spring</option>
+                        <option value="4">Disk Spring</option>
+                        <option value="5">Torsional Spring</option>
+                        <option value="6">Conical Spring</option>
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+        <span class="button" id="span1" style="float:right;">Next</span>
+        <script>
+            var slide1_ans=[2,6,4,1,3,5];
+            var i=1;
+            function checkans()
+            {
+                var id="slide1_"+i;
+                var sel=document.getElementById(id);
+                ans=sel.value;
+                if(ans==slide1_ans[i-1])
+                {
+                    sel.style.border="2px solid green";
+                    sel.style.color="green";
+                    sel.options[sel.selectedIndex].text="Correct";
+                    sel.disabled=true;
+                    //if(i<6)
+                        i++;
+                    var id="slide1_"+i;
+                    var sel=document.getElementById(id);
+                    if(sel)
+                    {
+                        sel.style.border="2px solid black";
+                        sel.disabled=false;
+                    }
+                }
+                else
+                {
+                    sel.style.border="2px solid red";
+                    sel.style.color="red";
+                    sel.options[sel.selectedIndex].text="Wrong";
+                }
+                if(i==7)
+                {
+                    document.getElementById("span1").style.display="block";
+                    return;
+                }
+
+
+            }
+        </script>
+        
+        
+    </body>
+</html>

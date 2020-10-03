@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body
+        {
+            margin: 0px;
+        }
+        #part_name
+        {
+            color:white;
+            background-color: black;
+            padding: 5px;
+            font-size: 18px;
+            z-index: 10;
+            position: absolute;
+            top:0px;
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 13px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;  
+        }
+    </style>
+    
+</head>
+<body>
+    <div>
+        <img id="identify_component" src="images/stm.png" style="height:500px">
+        <p id="part_name"></p>
+        <br><br>
+        <span class="button" id="span1" style="margin-left:300px">Next</span>
+    </div>
+     
+    <script>
+        //Make the imaage element draggagle:
+        var left=0,right=0;
+        identifyComponent(document.getElementById("identify_component"));
+        function identifyComponent(elmnt)  
+        {
+            var pos1 = 0, pos2 = 0;
+            elmnt.onmousemove = dragMouseDown1;
+            function dragMouseDown1(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = e.clientX;
+                pos2 = e.clientY;
+                var name=document.getElementById("part_name");
+                name.style.backgroundColor="black";
+                if(pos1>left+0&&pos1<left+260&&pos2>right+380&&pos2<right+505)
+                {
+                    name.innerHTML="Base Unit";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+105&&pos1<left+160&&pos2>right+325&&pos2<right+375)
+                {
+                    name.innerHTML="Dial (Load Indicator)";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+185&&pos1<left+220&&pos2>right+330&&pos2<right+370)
+                {
+                    name.innerHTML="Pressure valve";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+105&&pos1<left+150&&pos2>right+215&&pos2<right+275)
+                {
+                    name.innerHTML="Compression Spring";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+115&&pos1<left+145&&pos2>right+85&&pos2<right+135)
+                {
+                    name.innerHTML="Tensile Spring";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+25&&pos1<left+225&&pos2>right+180&&pos2<right+205)
+                {
+                    name.innerHTML="Upper compression plates";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+70&&pos1<left+185&&pos2>right+285&&pos2<right+300)
+                {
+                    name.innerHTML="Lower compression plates";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+115&&pos1<left+135&&pos2>right+45&&pos2<right+75)
+                {
+                    name.innerHTML="Upper tension hook";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else if(pos1>left+115&&pos1<left+135&&pos2>right+150&&pos2<right+180)
+                {
+                    name.innerHTML="Lower tension hook";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+                else
+                {
+                    //name.innerHTML="X = "+pos1+" y = "+pos2;
+                    
+                    name.innerHTML="";
+                    name.style.backgroundColor="transparent";
+                    name.style.left=pos1+10+"px";
+                    name.style.top=pos2+10+"px";
+                }
+            }   
+    }
+    </script>
+</body>
+</html>

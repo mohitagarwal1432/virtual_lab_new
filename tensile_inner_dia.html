@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #dragImage2 
+        {
+            position: absolute;
+            z-index: 9;
+            left:100px;
+            top:150px;
+        }
+        #part1,#part2
+        {
+            position: absolute;
+            top:100px;
+            left:400px;
+            transition: .1s;
+        }
+        #part1
+        {
+            left:360px;
+        }
+        .division
+        {
+            border: 2px solid black;
+            width: 900px;
+            height: 500px;
+            background-color: #b3f0ff;
+        }
+        #test
+        {
+            height: 80px;
+            width: 50px;
+            position: absolute;
+            background-color: red;
+            top:35px;
+            left:355px;
+            
+        }
+        .caliper-control,.reading
+        {
+            background-color: black;
+            color: white;
+            width: 30px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            top:240px;left:480px;
+        }
+        .reading
+        {
+            width:100px;
+            top:280px;
+            display: none;
+            z-index: 3;
+        }
+        .caliper-control:nth-child(even)
+        {
+            left:530px
+        }
+        #zoom
+        {
+            height: 260px;
+            position: absolute;
+            top:160px;
+            left:20px;
+            z-index: 0;
+            display: none;
+        }
+        #steps
+        {
+            color:black;
+            text-align: center;
+        }
+        #input-section
+        {
+            position: absolute;
+            left: 230px;
+            top:300px;
+            text-align: center;
+            display: none;
+            width: 670px;
+        }
+        li
+        {
+            display: inline-block;
+        }
+        input
+        {
+            width: 70px;
+            height: 30px;
+        }
+        .button
+        {
+            background-color: black;
+            color: white;
+            width: 70px;
+            padding:5px 0px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10PX;
+        }
+        #console
+        {
+            background-color: white;
+            color: red;
+            width: 250px;
+            height: 150px;
+            text-align: center;
+            padding: 5px;
+            position: absolute;
+            top:330px;
+            left: 350px;
+        } 
+    </style>
+</head>
+<body>
+    <!--<div id="test"></div>-->
+    <img id="dragImage2" src="images/tensile_spring.png" style="width:60px;">
+    <div class="division">
+        <img id="part1" src="images/part1.png">
+        <img id="part2" src="images/part2.png">
+        <p class="caliper-control"onclick="back();"> < </p>
+        <p class="caliper-control" onclick="forward()"> > </p>
+        <p class="reading" onclick="showzoom()">Get Reading</p>
+        <img src="images/tensile_mag1.png" id="zoom">
+        <h3 id="steps">Drag the spring and fix it on the caliper to measure the inner diameter.</h3>
+        <div id="input-section">
+            <form>
+            <ul type="none">
+                <li>
+                    <h3>MAIN SCALE</h3>
+                    <p>(in mm)</p>
+                    <input type="number" id="ms" required onchange="verify()"><br>Range : 30-50
+                </li>
+                <li>
+                    <h1> + </h1>
+                </li>
+                <li>
+                    <h3>VERNIER SCALE</h3>
+                    <p>(in mm)</p>
+                    <input type="number" id="vs" required onchange="verify()"><br>1-10
+                </li>
+                <li>
+                    <h2> X </h2>
+                </li>
+                <li>
+                    <h3>LEAST COUNT</h3>
+                    <p>(in mm)</p>
+                    <input type="number" id="lc" step="0.02" required onchange="verify()"><br>x.xx
+                </li>
+                <li>
+                    <h1> = </h1>
+                </li>
+                <li>
+                    <h3>INNER DIA(D<sub>i</sub>)</h3>
+                    <p>(in mm)</p>
+                    <h2 id="dia">______</h2>
+                </li>
+            </ul>
+            <h2 id="feed" style="position:absolute;bottom:-15px;right:30px"></h2>
+            </form>
+        </div>
+        <div id="console">
+            <h3 style="color:black;">CONSOLE</h3>
+            <h4 id="log"></h4>
+        </div>
+        <span class="button" id="span1" style="float:right;display:none">Next</span>
+    </div>
+    <script>
+        //Make the imaage element draggagle:
+        var set=0;
+        dragElement1(document.getElementById("dragImage2"));
+        function dragElement1(elmnt) 
+        {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            elmnt.onmousedown = dragMouseDown1;
+
+            function dragMouseDown1(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement1;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag1;
+            }
+
+            function elementDrag1(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (pos4-10) + "px";
+                elmnt.style.left = (pos3) + "px";
+            }
+
+            function closeDragElement1() 
+            {
+                /* stop moving when mouse button is released:*/
+                if(pos3>355&&pos3<405&&pos4>15&&pos4<115)
+                {
+                    elmnt.style.top = (60) + "px";
+                    elmnt.style.left = (362) + "px";  
+                    set=1;
+                    document.getElementById("log").innerHTML="Execellent work!!<br><br>SPRING IS FIXED.";
+                    document.getElementById("log").style.color="green";
+                    document.getElementById("steps").innerHTML="Adjust the caliper.";
+                }
+                else
+                {
+                    document.getElementById("log").innerHTML="You Placed the spring in the wrong position.<br> Place the spring between upper jaws.";
+                    document.getElementById("log").style.color="red";
+                    var x1=pos3;  
+                    var y1=pos4; 
+                    //alert(x1);
+                    if(!timer)
+                    var timer=setInterval(function()
+                    {
+                        if(x1>100)
+                            x1--;
+                        if(x1<100)
+                            x1++;
+                        if(y1>150)
+                            y1--;
+                        if(y1<150)
+                            y1++;
+                        elmnt.style.top = (y1) + "px";
+                        elmnt.style.left = (x1) + "px";
+                        if(x1==100&&y1==150)
+                            clearInterval(timer);
+                    },0.01);
+                }
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+    }
+    </script>
+    <script>
+        var left=360;
+        function back()
+        {
+            if(left>300)
+                left-=2;
+            var p=document.getElementById("part1");
+            p.style.left=left+"px";
+            if(left==350&&set==1)
+            {
+                document.getElementsByClassName("reading")[0].style.display="block";
+                document.getElementById("steps").innerHTML="Click on get reading.";
+            }
+            else
+            {
+                document.getElementsByClassName("reading")[0].style.display="none";
+            }
+        }
+        function forward()
+        {
+            if(left<360)
+                left+=2;
+            var p=document.getElementById("part1");
+            p.style.left=left+"px";
+            if(left==350&&set==1)
+            {
+                document.getElementsByClassName("reading")[0].style.display="block";
+                document.getElementById("steps").innerHTML="Click on get reading.";
+            }
+            else
+            {
+                document.getElementsByClassName("reading")[0].style.display="none";
+            }
+        }
+        function showzoom()
+        {
+            document.getElementById("console").style.display="none";
+            document.getElementById("zoom").style.display="block";
+            document.getElementsByClassName("reading")[0].style.display="none";
+            document.getElementsByClassName("caliper-control")[0].style.display="none";
+            document.getElementsByClassName("caliper-control")[1].style.display="none";
+            document.getElementById("steps").innerHTML="Note the main scale reading and fill in the main scale input box.";
+            document.getElementById("input-section").style.display="block";
+        }
+        function verify()
+        {
+            var ms=parseFloat(document.getElementById("ms").value);
+            var vs=parseFloat(document.getElementById("vs").value);
+            var lc=parseFloat(document.getElementById("lc").value);
+            var a=0;
+            var b=0;
+            var c=0;
+            if(ms)
+            {
+                if(ms==45)
+                {
+                    a=1;
+                    document.getElementById("feed").innerHTML="CORRECT";
+                    document.getElementById("feed").style.color="GREEN";
+                    document.getElementById("ms").disabled=true;
+                    document.getElementById("ms").style.border="1px solid green";
+                    document.getElementById("steps").innerHTML="Note the vernier scale reading and fill in the vernier scale input box.";
+                }
+                else
+                {
+                    document.getElementById("ms").style.border="1px solid red";
+                    document.getElementById("feed").innerHTML="WRONG";
+                    document.getElementById("feed").style.color="RED";
+                }
+            }
+            if(vs)
+            {
+                if(vs>=1&&vs<=4)
+                {
+                    b=1;
+                    document.getElementById("feed").innerHTML="CORRECT";
+                    document.getElementById("feed").style.color="GREEN";
+                    document.getElementById("vs").disabled=true;
+                    document.getElementById("vs").style.border="1px solid green";
+                    document.getElementById("steps").innerHTML="Fill the least count in the least count input box.";
+                }
+                else
+                {
+                    document.getElementById("feed").innerHTML="WRONG";
+                    document.getElementById("feed").style.color="RED";
+                    document.getElementById("vs").style.border="1px solid red";
+                }
+            }
+            if(lc)
+            {
+                if(lc==0.02)
+                {
+                    c=1;
+                    document.getElementById("lc").style.border="1px solid green";
+                    document.getElementById("feed").innerHTML="CORRECT";
+                    document.getElementById("feed").style.color="GREEN";
+                    document.getElementById("lc").disabled=true;
+                }
+                else
+                {
+                    document.getElementById("feed").innerHTML="WRONG";
+                    document.getElementById("feed").style.color="RED";
+                    document.getElementById("lc").style.border="1px solid red";
+                }
+            }
+            if(a&&b&&c)
+            {
+                var ans=ms+vs*0.02;
+                document.getElementById("dia").innerHTML=ans;
+                document.getElementById("feed").innerHTML="Exact diameter = 45.06mm";
+                document.getElementById("feed").style.color="black";
+                document.getElementById("span1").style.display="block";
+            }
+        }
+        
+    </script>
+
+    </body>
+</html>

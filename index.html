@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simuation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    
+</head>
+<body>
+    <div class="main-section">
+    <div class="mySlide1">
+        <h1>Choose the correct name for respective spring</h1>
+        <iframe src="match_spring.html" id="myiframe1" height="750px" width="850px" style="padding-left:75px;"></iframe>
+    </div> 
+    <div class="mySlide1">
+        <h1>Move the cursor over the Universal Spring Testing machine to identify various parts.</h1>
+        <iframe src="machine_component_identification.html" id="myiframe2" height="750px" width="950px" style="padding:60px 0 0 150px;" >
+        </iframe>
+    </div> 
+    <div class="mySlide1" style="height:800px">
+        <h1>Choose Test:</h1>
+        <div class="choose-option" onclick="tensiletest()">
+            <h3>Tensile Test</h3>
+        </div>
+
+        <div class="choose-option" onclick="compressiontest()">
+            <h3>Compression Test</h3>
+        </div>
+    </div> 
+    <div class="mySlide1" style="height:800px">
+        <h1>Choose spring for <span id="identify_spring"></span></h1>
+        <img src="images/tensile_spring.png" style="margin-left:280px;cursor:pointer;" onclick="tensilespring()">
+        <img src="images/compressive_spring.png" onclick="compressionspring()" style="margin-left:250px;cursor:pointer">
+        <h3 style="background-color:white;color:red;padding:5px;display:none;width:auto;text-align:center" id="error_spring"></h3>
+        
+    </div> 
+    <div class="mySlide1">
+        <h1>Measure the outer diameter of the spring</h1>
+        <iframe src="" id="myiframe3" height="750px" width="950px" style="padding:30px 0 0 40px;" >
+        </iframe>
+    </div>
+    <div class="mySlide1">
+        <h1>Measure the inner diameter of the spring</h1>
+        <iframe src="" id="myiframe4" height="750px" width="950px" style="padding:30px 0 0 40px;" >
+        </iframe>
+    </div>
+    <div class="mySlide1">
+        <h1>Fix the spring on the machine.</h1>
+        <iframe src="" id="myiframe5" height="750px" width="950px" style="padding:30px 0 0 40px;" >
+        </iframe>
+    </div>
+    <div class="mySlide1">
+        <h1>Perform task as mentioned in CONSOLE</h1>
+        <iframe src="" id="myiframe6" height="750px" width="950px" style="padding:30px 0 0 40px;" >
+        </iframe>
+    </div>
+    </div>
+    <script src="js/indexjs.js"></script>
+
+</body>
+</html>
